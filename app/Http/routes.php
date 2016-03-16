@@ -23,7 +23,7 @@ Route::post('/login', [
 	'uses'=>'Auth\AuthController@postLogin'
 	]);
 Route::get('/logout', [
-	'as'=>'postlogout',
+	'as'=>'logout',
 	'uses'=>'Auth\AuthController@getLogout'
 	]);
 Route::group(['middleware' => 'auth'], function()

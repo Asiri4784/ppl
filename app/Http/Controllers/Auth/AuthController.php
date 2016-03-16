@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Models\Admin;
+use App\Models\Activity;
 use Auth;
 use Validator;
 use Illuminate\Contracts\Auth\Guard;
@@ -85,7 +86,8 @@ class AuthController extends Controller
 
     public function getDashboard()
     {
-        return view('master.adminpage');
+        $activity=Activity::all();
+        return view('master.adminpage', compact('activity'));
     }
     
     public function postLogin(LoginRequest $request) {
