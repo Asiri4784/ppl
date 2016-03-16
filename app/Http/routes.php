@@ -20,7 +20,11 @@ Route::get('/login', [
 Route::post('/login', [
 	'as'=>'postlogin',
 	'uses'=>'Auth\AuthController@postLogin'
-	]);
+	]);\
+	
+Route::get('/admin', function () {
+	return view('admin.index');
+});
 
 /*
 |--------------------------------------------------------------------------
@@ -32,10 +36,10 @@ Route::post('/login', [
 | kernel and includes session state, CSRF protection, and more.
 |
 */
-Route::group(['middleware' => 'auth'], function()
-{
-	Route::get('/admin', [
-		'as'=>'admin',
-		'uses'=>'Auth\AuthController@getProfile'
-		]);
-});
+// Route::group(['middleware' => 'auth'], function()
+// {
+// 	Route::get('/admin', [
+// 		'as'=>'admin',
+// 		'uses'=>'Auth\AuthController@getProfile'
+// 		]);
+// });
