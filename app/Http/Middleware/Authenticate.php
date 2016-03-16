@@ -3,7 +3,6 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use Auth;
 use Illuminate\Contracts\Auth\Guard;
 
 class Authenticate

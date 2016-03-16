@@ -3,22 +3,27 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Models\Admin;
-use Validator;
 use Auth;
-use Hash;
+use Validator;
+use Illuminate\Contracts\Auth\Guard;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
 use Illuminate\Http\Request;
-use Illuminate\Contracts\Auth\Guard;
-use App\Http\Requests\Auth\LoginRequest; 
-
+use App\Http\Requests\Auth\LoginRequest;
 
 class AuthController extends Controller
 {
-    protected $redirectTo = '/admin';
-    protected $admin; 
-    protected $auth;
+    /*
+    |--------------------------------------------------------------------------
+    | Registration & Login Controller
+    |--------------------------------------------------------------------------
+    |
+    | This controller handles the registration of new users, as well as the
+    | authentication of existing users. By default, this controller uses
+    | a simple trait to add these behaviors. Why don't you explore it?
+    |
+    */
 
     use AuthenticatesAndRegistersUsers, ThrottlesLogins;
 
@@ -27,44 +32,77 @@ class AuthController extends Controller
      *
      * @return void
      */
+
+
+   protected $redirectPath = '/dashboard';
+
+
     public function __construct(Guard $auth, Admin $admin)
-    {
+    {   
         $this->admin = $admin; 
         $this->auth = $auth;
+        //$this->middleware('guest', ['except' => 'getLogout']);
     }
 
+    /**
+     * Get a validator for an incoming registration request.
+     *
+     * @param  array  $data
+     * @return \Illuminate\Contracts\Validation\Validator
+     */
+    /**protected function validator(array $data)
+    {
+        return Validator::make($data, [
+            'name' => 'required|max:255',
+            'email' => 'required|email|max:255|unique:users',
+            'password' => 'required|confirmed|min:6',
+        ]);
+    }*/
+
+    /**
+     * Create a new user instance after a valid registration.
+     *
+     * @param  array  $data
+     * @return User
+     */
+    /**protected function create(array $data)
+    {
+        return User::create([
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'password' => bcrypt($data['password']),
+        ]);
+    }
+    */
     public function getLogin()
     {
-        if(!Auth::check())
+        if(Auth::check())
         {
-             return view('adminlogin');
+            return redirect('/dashboard');
         }
-        return redirect('/admin');
-       
+        return view('content.body-login');
     }
 
-    public function getProfile()
+    public function getDashboard()
     {
-        dd(Auth::check());
-        return view('adminpage');
+        return view('master.adminpage');
     }
-
-    public function postLogin(LoginRequest $request) 
-    {
-         $this->validate($request, [
-                'username' => 'required', 'username' => 'required',
+    
+    public function postLogin(LoginRequest $request) {
+       $this->validate($request, [
+                'username' => 'required', 'password' => 'required',
             ]);
     
-            $credentials = $request->only('username', 'password');  
-            if ($this->auth->attempt($credentials, $request->has('remember_token')))
+            $credentials = $request->only('username', 'password');
+    
+            if ($this->auth->attempt($credentials, $request->has('remember')))
             {
                 return redirect()->intended($this->redirectPath());
             }
             return redirect('/login')->withErrors([
-            'username' => 'The email or the password is invalid. Please try again.',
+            'username' => 'The username or the password is invalid. Please try again.',
              ]);
-    }
-
+     }
     public function getLogout()
     {
         $this->auth->logout();
