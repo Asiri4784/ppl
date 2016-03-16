@@ -1,18 +1,19 @@
 <?php
-
-/*
-|--------------------------------------------------------------------------
-| Routes File
-|--------------------------------------------------------------------------
-|
-| Here is where you will register all of the routes in an application.
-| It's a breeze. Simply tell Laravel the URIs it should respond to
-| and give it the controller to call when that URI is requested.
-
-*/
-use App\Http\Controllers\PageController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\PasswordController;
+/*
+|--------------------------------------------------------------------------
+| Application Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register all of the routes for an application.
+| It's a breeze. Simply tell Laravel the URIs it should respond to
+| and give it the controller to call when that URI is requested.
+|
+*/
+Route::get('/', function () {
+    return view('welcome');
+});
 Route::get('/login', [
 	'as'=>'login',
 	'uses'=>'Auth\AuthController@getlogin'
@@ -20,26 +21,20 @@ Route::get('/login', [
 Route::post('/login', [
 	'as'=>'postlogin',
 	'uses'=>'Auth\AuthController@postLogin'
-	]);\
-	
-Route::get('/admin', function () {
-	return view('admin.index');
+	]);
+Route::get('/logout', [
+	'as'=>'postlogout',
+	'uses'=>'Auth\AuthController@getLogout'
+	]);
+Route::group(['middleware' => 'auth'], function()
+{
+    Route::get('/dashboard', [
+	'as'=>'dashboard',
+	'uses'=>'Auth\AuthController@getDashboard'
+	]);
 });
+/**Route::controllers([
+	'auth' => 'Auth\AuthController',
+	'password' => 'Auth\PasswordController',
+]);*/
 
-/*
-|--------------------------------------------------------------------------
-| Application Routes
-|--------------------------------------------------------------------------
-|
-| This route group applies the "web" middleware group to every route
-| it contains. The "web" middleware group is defined in your HTTP
-| kernel and includes session state, CSRF protection, and more.
-|
-*/
-// Route::group(['middleware' => 'auth'], function()
-// {
-// 	Route::get('/admin', [
-// 		'as'=>'admin',
-// 		'uses'=>'Auth\AuthController@getProfile'
-// 		]);
-// });
