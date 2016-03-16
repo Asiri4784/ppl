@@ -12,9 +12,15 @@ class Admin extends Model implements AuthenticatableContract, CanResetPasswordCo
 {
 	use Authenticatable, CanResetPassword;
 	protected $table = 'admin';
-	protected $fillable = ['id','username','fullname','birthdate', 'address','email','created_at','updated_at','role','sex','mobile_phone','password','remember_token'];
+	protected $fillable = ['id','username','fullname','birthdate', 'address','email','created_at','updated_at','role','sex','mobile_phone','password'];
 	protected $hidden = ['password', 'remember_token'];
 	protected $primaryKey = 'id';
 	public $timestamps=true;
+
+	public function getAuthIdentifier()
+    {
+        return $this->username; //should be changed to
+        return $this->id;
+    }
 }
 ?>
